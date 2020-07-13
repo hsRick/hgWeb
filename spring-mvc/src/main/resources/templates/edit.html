@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <title>修改资料</title>
+    <link rel="stylesheet" th:href="@{/css/style2.css}">
+    <script th:src="@{/scriptaculous/lib/prototype.js}" type="text/javascript"></script>
+    <script th:src="@{/scriptaculous/src/effects.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:src="@{/js/validation.js}"></script>
+    <script th:src="@{/js/jquery-2.2.0.min.js}"></script>
+    <title>编辑</title>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            function formCallback(result, form) {
+                window.status = "valiation callback for form '" + form.id + "': result = " + result;
+            }
+
+            var valid = new Validation('test', {immediate: true, onFormValidate: formCallback});
+            Validation.addAllThese([
+                ['validate-password', '> 6 characters', {
+                    minLength: 7,
+                    notOneOf: ['password', 'PASSWORD', '1234567', '0123456'],
+                    notEqualToField: 'field1'
+                }],
+                ['validate-password-confirm', 'please try again.', {
+                    equalToField: 'field8'
+                }]
+            ]);
+            var demo = "";
+            $("input").focus(function () {
+                demo = $(this).val();
+                if (demo != "") {
+                    $(this).val("");
+                }
+            })
+            $("input").blur(function () {
+                if ($(this).val() == "") {
+                    $(this).val(demo);
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+
+<div class="form_content">
+    <form id="test" action="/hg/submit.do" method="post"  ENCTYPE="multipart/form-data">
+        <fieldset>
+            <legend>修改个人资料</legend>
+            <div class="form-row">
+                <div class="field-label"><label for="field1">用户名</label>:</div>
+                <div class="field-widget"><input th:value="${user.username}" name="username" id="field1" class="required" title="Enter your name"/>
+                    <input type="hidden" name="userid" th:value="${user.userid}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label"><label for="field2">密码</label>:</div>
+                <div class="field-widget"><input th:value="${user.password}" name="password" id="field2" class="required" title="Enter your password" type="password"/>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label">性别:</div>
+                <div class="field-widget">
+                    <input type="radio" th:value="男" name="sex" th:attr="checked=${user.sex=='男'}">男
+                    <input type="radio" th:value="女" name="sex" th:attr="checked=${user.sex=='女'}">女
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label"><label for="field11">修改头像</label>:</div>
+                <div class="field-widget"><input type="file" name="file" accept="image/*" id="field11" class="required" title="从文件选择一张图片"/>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label"><label for="field3">About me</label>:</div>
+                <div class="field-widget"><textarea class="required" id="field3" th:text="${user.text}" name="text"></textarea></div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label"><label for="field12">修改背景</label>:</div>
+                <div class="field-widget"><input type="file" name="bfile" accept="image/*" id="field12" class="required" title="从文件选择一张图片"/>
+                </div>
+            </div>
+
+        </fieldset>
+
+        <input type="submit" class="submit" value="提交修改"/> <input class="reset" type="button" value="Reset"
+                                                                    onclick="valid.reset(); return false"/>
+        <span th:text="${msg}"></span>
+    </form>
+    <a th:href="'/hg/login.do?userid='+${user.userid}">
+        <button>返回个人主页</button>
+    </a>
+</div>
+
+</body>
+</html>

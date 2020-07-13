@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hg.reading.springstart.mapper.comment.CommentMapper">
+    <!-- 查询所有贴-->
+    <resultMap id="Comments" type="Comment">
+        <id column="selfid" property="selfid"/>
+        <result column="userid" property="userid"/>
+        <result column="ctext" property="ctext"/>
+        <result column="parentid" property="parentid"/>
+        <result column="essayid" property="essayid"/>
+        <result column="username" property="username"/>
+    </resultMap>
+    <select id="getComments" resultMap="Comments">
+        SELECT `comment`.`selfid`,`comment`.`parentid`,`comment`.`essayid`,`comment`.`userid`,`comment`.`ctext`,`hgusers`.`username` FROM `comment` LEFT JOIN `hgusers` ON `comment`.`userid`=`hgusers`.`userid`;
+    </select>
+
+    <insert id="insertComment" parameterType="Comment">
+        INSERT INTO `comment` VALUES(NULL,#{parentid},#{essayid},#{userid},#{ctext});
+    </insert>
+    
+    <delete id=""></delete>
+</mapper>

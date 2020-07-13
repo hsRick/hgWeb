@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hg.reading.springstart.mapper.friend.FriendMapper">
+    <!-- 通过用户id查询好友集合 -->
+    <resultMap id="FriendTo" type="HgUsers">
+        <id column="friendid" property="userid"/>
+        <result column="username" property="username"/>
+        <result column="sex" property="sex"/>
+        <result column="text" property="text"/>
+    </resultMap>
+    <select id="getFriendList" resultMap="FriendTo">
+		SELECT
+		friendid,
+		username,
+		sex,
+		text,
+		status
+		FROM friendship
+		INNER JOIN hgusers  ON  `friendship`.`selfid`=#{userid,jdbcType=INTEGER} AND friendship.`friendid`=`hgusers`.`userid`
+	</select>
+
+    <insert id="insertFriend" parameterType="Friend">
+        INSERT INTO `friendship` VALUES(#{selfid},#{friendid},${status});
+    </insert>
+
+    <resultMap id="ApplyTo" type="HgUsers">
+        <id column="userid" property="userid"/>
+        <result column="username" property="username"/>
+        <result column="sex" property="sex"/>
+        <result column="text" property="text"/>
+        <result column="status" property="status"/>
+    </resultMap>
+    <select id="getApplyList" resultMap="ApplyTo">
+		SELECT
+		userid,
+		username,
+		sex,
+		text,
+		status
+		FROM friendship
+		INNER JOIN hgusers  ON  `friendship`.`friendid`=#{userid,jdbcType=INTEGER} AND friendship.`selfid`=`hgusers`.`userid`
+	</select>
+
+    <delete id="deleteFriend" parameterType="Friend">
+        DELETE FROM `friendship` WHERE `friendship`.`selfid`=#{selfid} AND `friendship`.`friendid`=#{friendid}
+    </delete>
+
+    <update id="updateFriend" parameterType="Friend">
+        UPDATE `friendship` SET `friendship`.`status`=#{status} WHERE `friendship`.`selfid`=#{selfid} AND `friendship`.`friendid`=#{friendid}
+    </update>
+
+</mapper>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>好友申请</title>
+    <style>
+        .fa{
+            float: left;
+        }
+        .div{
+            border:5px solid white;
+            width: 500px;
+        }
+        ul li{
+            list-style-type: none;
+            margin:0px;
+        }
+    </style>
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var selfid = $("#selfid").attr("value");
+            $("[name=apply]").change(function () {
+                var status = $(this).val();
+                var friendid = $(this).next().attr("value");
+                alert(selfid+friendid+status);
+                $.getJSON(
+                    "/hfFriend.do",
+                    {"status":status,"selfid":selfid,"friendid":friendid},
+                    function (data) {
+                        alert(data);
+                        window.location.href = "/getApplyList.do?selfid="+selfid;
+                    }
+                )
+            })
+
+            $.getJSON(
+                "/friend.do",
+                {"userid": selfid},
+                function (result) {
+                    let friendList = eval(result);
+                    if (friendList != null) {
+                        $.each(friendList, function (n, ve) {
+                            if (n % 10 == 0) {
+                                $("#haoyou").append("<ul></ul>")
+                            }
+                            $("#haoyou").children("ul:last").append("<li><a href=\"hg/login.do?userid=" + ve.userid + "\">" + ve.username + "</a></li>");
+                        })
+                    } else {
+                        alert("您还没有添加过好友")
+                    }
+                }
+            )
+        })
+    </script>
+</head>
+<body>
+<a th:href="'/hg/login.do?userid='+${selfid}">
+    <button>返回个人主页</button>
+</a>
+    <input type="hidden" th:value="${selfid}" id="selfid">
+<div class="fa div">
+    <h5>好友申请列表</h5>
+    <table>
+        <tr><td>姓名</td><td>操作</td></tr>
+        <tr th:each="friend:${applyList}">
+
+            <td th:text="${friend.username}">
+            </td>
+            <td>
+                <select name="apply">
+                    <option value="0">忽略</option>
+                    <option value="1">拒绝</option>
+                    <option value="2">同意</option>
+                </select>
+                <input type="hidden" th:value="${friend.userid}"  name="friendid">
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+<div id="haoyou" class="fa div">
+    <h5>好友列表</h5>
+</div>
+</body>
+</html>

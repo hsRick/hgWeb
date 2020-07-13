@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hg.reading.springstart.mapper.essay.EssayMapper">
+    <!-- 查询所有贴-->
+    <resultMap id="AllEssay" type="Essay">
+        <id column="essayid" property="essayid"/>
+        <result column="userid" property="userid"/>
+        <result column="etext" property="etext"/>
+        <result column="picture" property="picture"/>
+        <result column="etime" property="etime"/>
+        <result column="username" property="username"/>
+        <result column="bookname" property="bookname"/>
+    </resultMap>
+    <select id="getAllEssay" resultMap="AllEssay">
+        SELECT
+        essayid,`essay`.`userid`,etext,picture,etime,username,bookname
+        FROM
+        `essay` LEFT JOIN `hgusers` ON `essay`.`userid`=`hgusers`.`userid`
+        <where>
+         <if test="friendid!=null">
+             `essay`.`userid`=#{friendid,jdbcType=INTEGER}
+         </if>
+         <if test="friendid==null">
+             and `essay`.`essayid` &lt;=
+             (SELECT
+             `essay`.`essayid`
+             FROM
+             `essay`
+             ORDER BY `essay`.`essayid` DESC
+             LIMIT #{pageAge,jdbcType=INTEGER}, 1)
+             ORDER BY `essay`.`essayid` DESC
+             LIMIT #{pageSize,jdbcType=INTEGER} ;
+         </if>
+        </where>
+    </select>
+
+    <!--获取总条数-->
+    <select id="getTotal" parameterType="Integer" resultType="int">
+        SELECT COUNT('essayid') FROM `essay`
+        <where>
+            <if test="userid!=null">
+                userid = #{userid};
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertEssay" parameterType="Essay">
+        INSERT INTO `essay` VALUES (NULL,#{userid},#{etext},#{picture},#{etime},#{bookname});
+    </insert>
+
+    <delete id="deleteEssayById" parameterType="Integer">
+        DELETE FROM `essay` WHERE essayid = #{essayid};
+    </delete>
+
+    <resultMap id="bookcount" type="Book">
+        <result column="COUNT(*)" property="recount"/>
+        <result column="bookname" property="bookname"/>
+    </resultMap>
+
+    <select id="getBooks" resultMap="bookcount">
+        SELECT COUNT(*),bookname FROM `essay` GROUP BY bookname ORDER BY COUNT(*) DESC LIMIT 10;
+    </select>
+</mapper>

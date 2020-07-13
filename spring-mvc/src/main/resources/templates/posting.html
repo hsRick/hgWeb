@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <title>记录感想</title>
+    <link rel="stylesheet" th:href="@{/css/style2.css}">
+    <script th:src="@{/scriptaculous/lib/prototype.js}" type="text/javascript"></script>
+    <script th:src="@{/scriptaculous/src/effects.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:src="@{/js/validation.js}"></script>
+    <script th:src="@{/js/jquery-2.2.0.min.js}"></script>
+    <title>编辑</title>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).click(function () {
+                $("#sp").text("");
+            })
+        })
+    </script>
+</head>
+<body>
+
+<div class="form_content">
+    <form id="test" action="/insertEssay.do" method="post"  ENCTYPE="multipart/form-data">
+        <fieldset>
+            <legend>记录感想</legend>
+            <div class="form-row">
+                <div class="field-label"><label for="field1">添加图片</label>:</div>
+                <div class="field-widget"><input type="file" name="file" accept="image/*" id="field1" class="required" title="从文件选择一张图片"/>
+                    <input type="hidden" th:value="${userid}" name="userid">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label"><label for="field3">添加文字</label>:</div>
+                <div class="field-widget"><textarea class="required" id="field3" name="etext"></textarea></div>
+            </div>
+
+            <div class="form-row">
+                <div class="field-label"><label for="field13">书籍名</label>:</div>
+                <div class="field-widget"><input name="bookname" id="field13" class="required" title="请输入推荐的书籍名"/>
+                </div>
+            </div>
+
+        </fieldset>
+
+        <input type="submit" class="submit" value="发布"/>
+        <span th:text="${msg}" id="sp"></span>
+    </form>
+    <a th:href="'/hg/login.do?userid='+${userid}"><button>返回个人主页</button></a>
+</div>
+
+</body>
+</html>

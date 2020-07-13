@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+<h1>hello world</h1>
+<div>
+    <table>
+        <tr>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>个签</td>
+        </tr>
+        <tr th:each="HgUsers:${friendList}">
+            <td th:text="${HgUsers.username}"></td>
+            <td th:text="${HgUsers.sex}"></td>
+            <td th:text="${HgUsers.text}"></td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

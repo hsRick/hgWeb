@@ -1,0 +1,31 @@
+#设置访问服务器端口号
+server:
+  port: 8080
+
+spring:
+  #加载开发环境配置文件
+  profiles:
+    active: dev
+  #配置SpringMVC静态资源访问路径
+  mvc:
+    static-path-pattern: /**
+    #注明服务器在启动时就加载这个servlet，参数为正整数，数字越小优先级越高
+    servlet:
+      load-on-startup: 1
+  #静态资源路径
+  resources:
+    static-locations: classpath:/static, classpath:/templates
+
+  thymeleaf:
+    #关闭缓存
+    cache: false
+    #注明文件路径前缀，使用时可省略
+    prefix: classpath:/templates/
+    #注明文件路径后缀，使用时可省略
+    suffix: .html
+    #规定字符集为UTF-8
+    encoding: UTF-8
+    #规避HTML格式检查
+    mode: HTML5
+    servlet:
+      content-type: text/html

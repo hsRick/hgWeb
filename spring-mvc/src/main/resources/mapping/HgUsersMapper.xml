@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hg.reading.springstart.mapper.user.HgUsersMapper">
+    <!-- 通过username获取User -->
+    <select id="getLoginUser" parameterType="String"
+            resultType="HgUsers">
+		select * from hgusers where username=#{username}
+	</select>
+
+    <!-- 通过userid获取User -->
+    <select id="getLoginUserById" parameterType="Integer"
+            resultType="HgUsers">
+		select * from hgusers where userid=#{userid}
+	</select>
+
+    <!-- 注册用户 -->
+    <insert id="insertUser" parameterType="HgUsers">
+        INSERT INTO `hgusers` (username,`password`) VALUE (#{username},#{password});
+    </insert>
+
+    <!-- 修改当前用户密码 -->
+    <update id="updateUser">
+        update hgusers
+        <set>
+            <if test="username != null and username !=''">username=#{username},</if>
+            <if test="password != null and password !=''">password=#{password},</if>
+            <if test="sex != null and sex !=''">sex=#{sex},</if>
+            <if test="text != null and text !=''">text=#{text},</if>
+            <if test="img != null and img !=''">img=#{img},</if>
+            <if test="bimg != null and bimg !=''">bimg=#{bimg},</if>
+        </set>
+        where
+        <if test="userid != null and userid !=''">userid=#{userid}</if>
+    </update>
+</mapper>
